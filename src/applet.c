@@ -1668,6 +1668,8 @@ static void nma_menu_show_cb (GtkWidget *menu, NMApplet *applet)
 		return;
 	}
 
+	nma_menu_add_vpn_submenu (menu, applet);
+
 	nma_menu_add_devices (menu, applet);
 
 	if (has_usable_wifi (applet)) {
@@ -1676,7 +1678,6 @@ static void nma_menu_show_cb (GtkWidget *menu, NMApplet *applet)
 		nma_menu_add_create_network_item (menu, applet);
 		nma_menu_add_separator_item (menu);
 	}
-	nma_menu_add_vpn_submenu (menu, applet);
 
 	if (!INDICATOR_ENABLED (applet))
 		gtk_widget_show_all (menu);
