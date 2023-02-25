@@ -111,18 +111,18 @@ ip4_private_init (CEPageIP4 *self, NMConnection *connection)
 	priv->connection_type = nm_setting_lookup_type (connection_type);
 
 	if (priv->connection_type == NM_TYPE_SETTING_VPN) {
-		str_auto = _("Automatic (VPN)");
-		str_auto_only = _("Automatic (VPN) addresses only");
+		str_auto = _("Automatic (VPN); addresses and nameservers");
+		str_auto_only = _("Automatic (VPN); addresses only");
 	} else if (   priv->connection_type == NM_TYPE_SETTING_GSM
 	           || priv->connection_type == NM_TYPE_SETTING_CDMA) {
-		str_auto = _("Automatic");
-		str_auto_only = _("Automatic, addresses only");
+		str_auto = _("Automatic; addresses and nameservers");
+		str_auto_only = _("Automatic; addresses only");
 	} else if (priv->connection_type == NM_TYPE_SETTING_PPPOE) {
-		str_auto = _("Automatic (PPPoE)");
-		str_auto_only = _("Automatic (PPPoE) addresses only");
+		str_auto = _("Automatic (PPPoE); addresses and nameservers");
+		str_auto_only = _("Automatic (PPPoE); addresses only");
 	} else {
-		str_auto = _("Automatic (DHCP)");
-		str_auto_only = _("Automatic (DHCP) addresses only");
+		str_auto = _("Automatic (DHCP); addresses and nameservers");
+		str_auto_only = _("Automatic (DHCP); addresses only");
 	}
 
 	priv->method = GTK_COMBO_BOX (gtk_builder_get_object (builder, "ip4_method"));
