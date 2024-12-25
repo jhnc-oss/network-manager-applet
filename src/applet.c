@@ -3447,6 +3447,8 @@ static void nma_init (NMApplet *applet)
 	applet->icon_size = 16;
 
 #ifdef WITH_APPINDICATOR
+	if (g_getenv ("NM_APPLET_USE_APPINDICATOR") != NULL)
+		with_appindicator = TRUE;
 #ifdef GDK_WINDOWING_X11
 	if (!GDK_IS_X11_DISPLAY (gdk_display_get_default ()))
 		with_appindicator = TRUE;
