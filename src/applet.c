@@ -119,6 +119,47 @@ applet_workaround_show_cb (NMApplet *applet, gpointer unused)
 		g_signal_handlers_disconnect_by_func (menu, applet_workaround_show_cb, applet);
 	}
 }
+
+
+static gboolean
+get_is_appindicator_avail (void)
+{
+	GDBusConnection *system_bus;
+	GError *system_bus_error = NULL;
+	GError *detect_error = NULL;
+	GVariant *detect_result;
+	gboolean appindicator_avail = FALSE;
+
+	system_bus = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &system_bus_error);
+	if (system_bus) {
+		detect_result = g_dbus_connection_call_sync (system_bus,
+								"org.freedesktop.DBus",
+								"/org/freedesktop/DBus",
+								"org.freedesktop.DBus",
+								"GetConnectionUnixProcessID",
+								g_variant_new ("(s)",
+									"org.kde.StatusNotifierWatcher"),
+								G_VARIANT_TYPE ("(u)"),
+								G_DBUS_CALL_FLAGS_NONE,
+								-1,
+								NULL,
+								&detect_error);
+		if (detect_result) {
+			appindicator_avail = TRUE;
+			g_debug ("Detected D-Bus interface org.kde.StatusNotifierWatcher, using AppIndicator for system tray");
+			g_variant_unref (detect_result);
+		} else {
+			g_warning ("Unable to detect status for D-Bus interface org.kde.StatusNotifierWatcher: %s", detect_error->message);
+			g_clear_error (&detect_error);
+		}
+		g_object_unref (system_bus);
+	} else {
+		g_warning ("Error connecting to D-Bus session bus: %s", system_bus_error->message);
+		g_clear_error (&system_bus_error);
+	}
+	return appindicator_avail;
+}
+
 #endif
 
 static inline NMADeviceClass *
@@ -3447,12 +3488,9 @@ static void nma_init (NMApplet *applet)
 	applet->icon_size = 16;
 
 #ifdef WITH_APPINDICATOR
-#ifdef GDK_WINDOWING_X11
-	if (!GDK_IS_X11_DISPLAY (gdk_display_get_default ()))
+	if (get_is_appindicator_avail()) {
 		with_appindicator = TRUE;
-#else
-	with_appindicator = TRUE;
-#endif
+	}
 #endif
 
 	g_signal_connect (applet, "startup", G_CALLBACK (applet_startup), NULL);
