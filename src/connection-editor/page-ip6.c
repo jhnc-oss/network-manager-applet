@@ -127,14 +127,14 @@ ip6_private_init (CEPageIP6 *self, NMConnection *connection)
 	priv->connection_type = nm_setting_lookup_type (connection_type);
 
 	if (priv->connection_type == NM_TYPE_SETTING_VPN) {
-		str_auto = _("Automatic (VPN)");
-		str_auto_only = _("Automatic (VPN) addresses only");
+		str_auto = _("Automatic (VPN); addresses and nameservers");
+		str_auto_only = _("Automatic (VPN); addresses only");
 	} else if (priv->connection_type == NM_TYPE_SETTING_PPPOE) {
-		str_auto = _("Automatic (PPPoE)");
-		str_auto_only = _("Automatic (PPPoE) addresses only");
+		str_auto = _("Automatic (PPPoE); addresses and nameservers");
+		str_auto_only = _("Automatic (PPPoE); addresses only");
 	} else {
-		str_auto = _("Automatic");
-		str_auto_only = _("Automatic, addresses only");
+		str_auto = _("Automatic (DHCP & SLAAC); addresses and nameservers");
+		str_auto_only = _("Automatic (DHCP & SLAAC); addresses only");
 	}
 
 	priv->method = GTK_COMBO_BOX (gtk_builder_get_object (builder, "ip6_method"));
@@ -170,7 +170,7 @@ ip6_private_init (CEPageIP6 *self, NMConnection *connection)
 	    || priv->connection_type == NM_TYPE_SETTING_WIRELESS) {
 		gtk_list_store_append (priv->method_store, &iter);
 		gtk_list_store_set (priv->method_store, &iter,
-		                    METHOD_COL_NAME, _("Automatic, DHCP only"),
+		                    METHOD_COL_NAME, _("Automatic (DHCP-only); addresses and nameservers"),
 		                    METHOD_COL_NUM, IP6_METHOD_AUTO_DHCP_ONLY,
 		                    METHOD_COL_ENABLED, TRUE,
 		                    -1);
